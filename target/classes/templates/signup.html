@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/common::head('登録')"></head>
+<body>
+	<!-- Common header -->
+	<div th:insert="fragment/common::mybar"></div>
+	
+	<!-- Registration card -->
+	<div class="col-4 mx-auto card">
+		<div class="card-header text-center p-3">
+			<strong>アカウント登録</strong> <!-- Registration title -->
+		</div>
+		<div class="card-body">
+			<!-- Registration form -->
+			<form th:action="@{/signup}" class="m-2" th:object="${form}" method="post">
+				<!-- Name field -->
+				<div class="mb-4 mt-2">
+					<label for="name" class="form-label">氏名</label>
+					<small class="m-3 text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+					<input type="text" class="form-control" id="name" name="name">
+				</div>
+				<!-- Email field -->
+				<div class="mb-4 mt-2">
+					<label for="email" class="form-label">メール</label>
+					<small class="m-3 text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+					<input type="email" class="form-control" id="email" name="email" th:field="*{email}">
+				</div>
+				<!-- Password field -->
+				<div class="mb-4">
+						<label for="password" class="form-label">パスワード</label>
+						<small class="m-3 text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+						<input type="password" class="form-control" id="password" name="password" th:field="*{password}">
+				</div>
+				<!-- Confirm Password field -->
+				<div class="mb-4">
+						<label for="confirmPassword" class="form-label">パスワード確認</label>
+						<small id="message" class="m-3 text-danger" th:errors="${form.confirmPassword}"></small>
+						<input type="password" class="form-control" id="confirmPassword" name="confirmPassword" th:fields="*{confirmPassword}">
+				</div>
+				<!-- Registration button -->
+				<div class="d-grid mb-4">
+					<button type="submit" class="btn btn-primary btn-block" id="enter" name="enter">
+						<small><strong>登録</strong></small>
+					</button>
+				</div>
+				<!-- Login link -->
+				<div class="mb-4 d-flex justify-content-center">
+					<a class="" th:href="@{/login}"><small>ログイン</small></a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.se.mapper.HotelBookingMapper">
+
+	<select id="getRoomList" resultMap="roomMap">
+		select * from room
+		order by id ASC
+	</select>
+	
+	<select id="getAllRoomList" resultMap="bookingMap">
+		select id,name,status,customer_id as bookedCustomer 
+		from room left join booking on room.id=booking.room_id 
+		order by room.id
+	</select>
+	
+	<select id="getRoom" resultMap="roomMap">
+		select * from room where id=1;
+	</select>
+
+	<select id="checkCustomerExist" resultMap="userMap">
+		select *
+		from customer
+		where email=#{email} and password=#{password}
+	</select>
+
+	<insert id="insertUser">
+		insert into customer(name, email, password)
+		values (#{name}, #{email}, #{password})
+	</insert>
+	
+	<insert id="createBooking">
+		insert into booking(customer_id, room_id)
+		values(#{customerId}, #{roomId}) 
+	</insert>
+	
+	<delete id="cancelBooking">
+		delete from booking
+		where customer_id=#{customerId} and room_id=#{roomId}
+	</delete>
+	
+	<update id="changeRoomStatus">
+		update room
+		set status=#{status}
+		where id=#{id}
+	</update>
+
+	<resultMap type="com.se.entity.Room" id="roomMap">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="status" property="status" />
+	</resultMap>
+	
+	<resultMap type="com.se.entity.Booking" id="bookingMap">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="status" property="status" />
+		<result column="bookedCustomer" property="bookedCustomer" />
+	</resultMap>
+
+	<resultMap type="com.se.entity.Customer" id="userMap">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="email" property="email" />
+		<result column="password" property="password" />
+	</resultMap>
+
+</mapper>

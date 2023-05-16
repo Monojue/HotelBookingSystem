@@ -1,0 +1,163 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/common::head('部屋一覧')"></head>
+<body>
+	<!-- Importing the common navigation bar -->
+	<div th:insert="fragment/common::mybar"></div>
+
+	<!-- Modal dialogs for canceling and success messages -->
+	<div th:replace="fragment/modalDialog :: cancelRoomModel"></div>
+	<div th:replace="fragment/modalDialog :: successRoomModel"></div>
+
+	<div class="col-6 mx-auto">
+		<div class="d-flex mb-3">
+			<div class="me-auto">
+				<h6>部屋一覧</h6>
+			</div>
+			<!-- Indicator for booked rooms -->
+			<div>
+				<div class="m-1 rounded-circle bg-secondary"
+					style="width: 15px; height: 15px;"></div>
+			</div>
+			<div>
+				<span class="m-1">予約済み</span>
+			</div>
+			<!-- Indicator for user's selected rooms -->
+			<div>
+				<div class="m-1 rounded-circle"
+					style="background-color: #03A800; width: 15px; height: 15px;"></div>
+			</div>
+			<div>
+				<span>あなたの予約</span>
+			</div>
+		</div>
+		<div class="row mx-auto text-center">
+			<!-- Loop over room list for non-logged-in users -->
+			<div th:if="${loginuser==null}" class="col-3"
+				th:each="room : ${booking}">
+				<input type="checkbox" class="btn-check" th:id="${room.id}"
+					th:checked=${room.status}> <label
+					onclick="redirectToLogin()"
+					class="btn btn-outline-success border border-gray m-2"
+					style="padding-top: 35px; width: 130px; height: 100px;"
+					th:for="${room.id}" th:text="${room.name}"
+					th:styleappend="${room.status}? 'pointer-events: none; background-color: gray;cursor: not-allowed! important;' :'cursor: pointer' "></label>
+			</div>
+			<!-- Loop over room list for logged-in users -->
+			<div th:if="${loginuser}" class="col-3" th:each="room : ${booking}">
+				<div th:if="${loginuser.id==room.bookedCustomer}">
+					<!-- User's selected room -->
+					<input type="checkbox" class="btn-check" th:id="${room.id}"
+						th:checked=${room.status}> <label
+						onclick="openModal(this)"
+						class="btn btn-outline-warning border border-gray m-2"
+						style="padding-top: 35px; width: 130px; height: 100px; color: white; background-color: #03A800;"
+						th:for="${room.id}" th:text="${room.name}"></label>
+				</div>
+				<div th:if="${loginuser.id!=room.bookedCustomer}">
+					<!-- Available room for selection -->
+					<input type="checkbox" class="btn-check" th:id="${room.id}"
+						th:checked=${room.status}> <label
+						onclick="selectRoom(this)"
+						class="btn btn-outline-success border border-gray m-2"
+						style="padding-top: 35px; width: 130px; height: 100px;"
+						th:for="${room.id}" th:text="${room.name}"
+						th:styleappend="${room.status}? 'pointer-events: none; background-color: gray;cursor: not-allowed! important;' :'cursor: pointer' "></label>
+				</div>
+			</div>
+			<!-- Form for submitting the selected rooms -->
+			<form name="registerForm" th:action="@{/register}" method="post"
+				th:object="${selected}">
+				<input id="selectedRoomList" name="selectedRoomList" type="hidden">
+
+				<div class="d-grid mt-4" style="width: 95%; margin: 0 auto;">
+					<button type="submit" class="btn btn-primary btn-block">
+						<small><strong>予約</strong></small>
+					</button>
+				</div>
+			</form>
+
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+		var roomIds = []; // Array to store checkbox IDs
+
+		// Function to handle room selection
+		function selectRoom(label) {
+			var roomId = label.getAttribute("for");
+			var checkbox = document.getElementById(roomId);
+			var checkboxState = checkbox.checked;
+			var selectRoom = document.getElementById("selectedRoomList");
+
+			if (!checkboxState) {
+				// Add checkbox ID to the array if checkbox is checked
+				roomIds.push(roomId);
+			} else {
+				// Remove checkbox ID from the array if checkbox is unchecked
+				var index = roomIds.indexOf(roomId);
+				if (index > -1) {
+					roomIds.splice(index, 1);
+				}
+			}
+			selectRoom.value = roomIds.join(",");
+			console.log(roomIds.join(","));
+		}
+
+		// Function to handle room deselection
+		function unSelectRoom(label) {
+			var roomId = label.getAttribute("for");
+			var checkbox = document.getElementById(roomId);
+			var checkboxState = checkbox.checked;
+			var selectRoom = document.getElementById("unselectRoomList");
+
+			if (checkboxState) {
+				// Add checkbox ID to the array if checkbox is checked
+				roomIds.push(roomId);
+			} else {
+				// Remove checkbox ID from the array if checkbox is unchecked
+				var index = roomIds.indexOf(roomId);
+				if (index > -1) {
+					roomIds.splice(index, 1);
+				}
+			}
+			selectRoom.value = roomIds.join(",");
+			console.log(roomIds.join(","));
+		}
+
+		function redirectToLogin() {
+			console.log('Go to login')
+		}
+
+		// Function to open a modal for room cancellation
+		var myModal;
+		function openModal(label) {
+			myModal = new bootstrap.Modal(document
+					.getElementById('cancelRoomModel'));
+			unSelectRoom(label);
+			var roomName = label.textContent;
+			var modalBody = document.getElementById("modalbody");
+			modalBody.textContent = roomName + ' の予約をキャンセルします、よろしいでしょうか？';
+			myModal.show();
+		}
+
+		// Function to close the modal
+		function closeModal() {
+			myModal.hide();
+			location.reload();
+		}
+
+		var bookedRoomList = /*[[${bookedRoomList}]]*/null;
+		// Check if bookedRoomList is not null and show a success modal
+		if (bookedRoomList) {
+			console.log(bookedRoomList);
+			myModal = new bootstrap.Modal(document
+					.getElementById('successRoomModel'));
+			myModal.show();
+		}
+	</script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
