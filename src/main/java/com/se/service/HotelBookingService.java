@@ -71,6 +71,17 @@ public class HotelBookingService {
 	public Customer checkCustomerExist(String email, String password) {
 		return this.bookingMapper.checkCustomerExist(email, password);
 	}
+	
+	/**
+	 * Check if a customer with the given email and password exists in the system
+	 *
+	 * @param email    the email of the customer
+	 * @param password the password of the customer
+	 * @return the customer if found, null otherwise
+	 */
+	public Customer checkCustomerAlreadySignup(String email) {
+		return this.bookingMapper.checkCustomerAlreadySignup(email);
+	}
 
 	/**
 	 * Check-in a customer for the selected rooms

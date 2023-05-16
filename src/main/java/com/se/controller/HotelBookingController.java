@@ -124,10 +124,17 @@ public class HotelBookingController {
 		if (!userForm.getPassword().equals(userForm.getConfirmPassword())) {
 			result.addError(new FieldError("form", "confirmPassword", "*パスワードが一致しません 。"));
 		}
+		
+		// check email already sign up
+		Customer customer = this.bookingService.checkCustomerAlreadySignup(userForm.getEmail());
+		if(!customer.equals(null)) {
+			result.addError(new FieldError("form", "email", "*このメールはすでに登録されています。"));
+		}
+
 		if (result.hasErrors()) {
 			return "signup";
 		}
-
+		
 		// Insert the user into the system
 		this.bookingService.insertUser(Utils.toEntity(userForm));
 		return "redirect:/";

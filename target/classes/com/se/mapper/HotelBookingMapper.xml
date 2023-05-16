@@ -5,15 +5,17 @@
 
 	<select id="getRoomList" resultMap="roomMap">
 		select * from room
-		order by id ASC
+		order by id
+		ASC
 	</select>
-	
+
 	<select id="getAllRoomList" resultMap="bookingMap">
-		select id,name,status,customer_id as bookedCustomer 
-		from room left join booking on room.id=booking.room_id 
+		select
+		id,name,status,customer_id as bookedCustomer
+		from room left join booking on room.id=booking.room_id
 		order by room.id
 	</select>
-	
+
 	<select id="getRoom" resultMap="roomMap">
 		select * from room where id=1;
 	</select>
@@ -24,21 +26,29 @@
 		where email=#{email} and password=#{password}
 	</select>
 
+	<select id="checkCustomerAlreadySignup" resultMap="userMap">
+		select *
+		from customer
+		where email=#{email}
+	</select>
+
 	<insert id="insertUser">
 		insert into customer(name, email, password)
-		values (#{name}, #{email}, #{password})
+		values
+		(#{name}, #{email}, #{password})
 	</insert>
-	
+
 	<insert id="createBooking">
 		insert into booking(customer_id, room_id)
-		values(#{customerId}, #{roomId}) 
+		values(#{customerId}, #{roomId})
 	</insert>
-	
+
 	<delete id="cancelBooking">
 		delete from booking
-		where customer_id=#{customerId} and room_id=#{roomId}
+		where customer_id=#{customerId}
+		and room_id=#{roomId}
 	</delete>
-	
+
 	<update id="changeRoomStatus">
 		update room
 		set status=#{status}
@@ -50,7 +60,7 @@
 		<result column="name" property="name" />
 		<result column="status" property="status" />
 	</resultMap>
-	
+
 	<resultMap type="com.se.dto.BookingDto" id="bookingMap">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
