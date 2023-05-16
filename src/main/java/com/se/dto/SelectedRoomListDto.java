@@ -1,8 +1,8 @@
-package com.se.form;
+package com.se.dto;
 
 import lombok.Data;
 
 @Data
-public class SelectedRoomList {
+public class SelectedRoomListDto {
 	String selectedRoomList;
 }

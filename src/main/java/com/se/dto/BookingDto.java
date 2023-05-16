@@ -1,9 +1,9 @@
-package com.se.entity;
+package com.se.dto;
 
 import lombok.Data;
 
 @Data
-public class Booking {
+public class BookingDto {
 
 	int id;
 	String name;

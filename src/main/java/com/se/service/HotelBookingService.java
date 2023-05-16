@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import com.se.entity.Booking;
+import com.se.dto.BookingDto;
+import com.se.dto.SelectedRoomListDto;
 import com.se.entity.Customer;
 import com.se.entity.Room;
-import com.se.form.SelectedRoomList;
 import com.se.mapper.HotelBookingMapper;
 
 @Service
@@ -20,22 +20,38 @@ public class HotelBookingService {
 	@Autowired
 	HotelBookingMapper bookingMapper;
 
-	// Get the list of rooms
+	/**
+	 * Get the list of rooms
+	 *
+	 * @return the list of rooms
+	 */
 	public ArrayList<Room> getRoomList() {
 		return this.bookingMapper.getRoomList();
 	}
 
-	// Get all room bookings
-	public ArrayList<Booking> getAllRoomList() {
+	/**
+	 * Get all room bookings
+	 *
+	 * @return the list of room bookings
+	 */
+	public ArrayList<BookingDto> getAllRoomList() {
 		return this.bookingMapper.getAllRoomList();
 	}
 
-	// Get a specific room
+	/**
+	 * Get a specific room
+	 *
+	 * @return the specific room
+	 */
 	public Room getRoom() {
 		return this.bookingMapper.getRoom();
 	}
 
-	// Insert a new user into the system
+	/**
+	 * Insert a new user into the system
+	 *
+	 * @param user the user to insert
+	 */
 	public void insertUser(Customer user) {
 		try {
 			this.bookingMapper.insertUser(user);
@@ -45,13 +61,24 @@ public class HotelBookingService {
 		}
 	}
 
-	// Check if a customer with the given email and password exists in the system
+	/**
+	 * Check if a customer with the given email and password exists in the system
+	 *
+	 * @param email    the email of the customer
+	 * @param password the password of the customer
+	 * @return the customer if found, null otherwise
+	 */
 	public Customer checkCustomerExist(String email, String password) {
 		return this.bookingMapper.checkCustomerExist(email, password);
 	}
 
-	// Check-in a customer for the selected rooms
-	public void checkIn(Customer customer, SelectedRoomList selectedRoomlist) {
+	/**
+	 * Check-in a customer for the selected rooms
+	 *
+	 * @param customer         the customer to check-in
+	 * @param selectedRoomlist the selected room list
+	 */
+	public void checkIn(Customer customer, SelectedRoomListDto selectedRoomlist) {
 		String[] roomList = selectedRoomlist.getSelectedRoomList().split(",");
 		try {
 			for (String roomId : roomList) {
@@ -63,8 +90,13 @@ public class HotelBookingService {
 		}
 	}
 
-	// Check out a customer from the selected room
-	public void checkout(Customer customer, SelectedRoomList selectedRoom) {
+	/**
+	 * Check out a customer from the selected room
+	 *
+	 * @param customer     the customer to check out
+	 * @param selectedRoom the selected room
+	 */
+	public void checkout(Customer customer, SelectedRoomListDto selectedRoom) {
 		try {
 			this.bookingMapper.cancelBooking(Integer.parseInt(customer.getId()),
 					Integer.parseInt(selectedRoom.getSelectedRoomList()));

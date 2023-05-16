@@ -2,6 +2,12 @@ package com.se.entity;
 
 import lombok.Data;
 
+/**
+ * Room Table
+ * 
+ * @author ASUS
+ *
+ */
 @Data
 public class Room {
 
