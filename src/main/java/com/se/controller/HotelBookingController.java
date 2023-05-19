@@ -161,7 +161,7 @@ public class HotelBookingController {
 		// Check in the customer for the selected rooms
 		this.bookingService.checkIn(customer, roomList);
 
-		attributes.addFlashAttribute("bookedRoomList", roomList.getSelectedRoomList());
+		attributes.addFlashAttribute("bookedRoomList", roomList.toString());
 		return "redirect:/";
 	}
 
