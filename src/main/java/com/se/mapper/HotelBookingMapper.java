@@ -12,12 +12,7 @@ import com.se.entity.Room;
 @Mapper
 public interface HotelBookingMapper {
 
-	/**
-	 * Retrieve the list of rooms
-	 *
-	 * @return the list of rooms
-	 */
-	public ArrayList<Room> getRoomList();
+  
 
 	/**
 	 * Retrieve all room bookings

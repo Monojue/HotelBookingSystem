@@ -14,9 +14,9 @@ public class SignUpForm {
 	@Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "*メールを正しく入力してください。")
 	String email;
 	@NotBlank(message = "*パスワードを入力してください。")
-	@Size(min = 8, message = "パスワードは8文字以上で入力してください")
+	@Size(min = 8, message = "パスワードは8文字以上で入力してください。")
 	String password;
 	@NotBlank(message = "*パスワードを入力してください。")
-	@Size(min = 8, message = "パスワードは8文字以上で入力してください")
+	@Size(min = 8, message = "パスワードは8文字以上で入力してください。")
 	String confirmPassword;
 }

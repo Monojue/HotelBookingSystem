@@ -9,34 +9,18 @@
 		ASC
 	</select>
 
-	<select id="getAllRoomList" resultMap="bookingMap">
-		select
-		id,name,status,customer_id as bookedCustomer
-		from room left join booking on room.id=booking.room_id
-		order by room.id
-	</select>
-
 	<select id="getRoom" resultMap="roomMap">
 		select * from room where id=1;
 	</select>
 
-	<select id="checkCustomerExist" resultMap="userMap">
-		select *
-		from customer
-		where email=#{email} and password=#{password}
+	<!-- 部屋一覧 -->
+	<select id="getAllRoomList" resultMap="bookingMap">
+		select
+		id,name,status,customer_id as bookedCustomer
+		from room left join
+		booking on room.id=booking.room_id
+		order by room.id ASC
 	</select>
-
-	<select id="checkCustomerAlreadySignup" resultMap="userMap">
-		select *
-		from customer
-		where email=#{email}
-	</select>
-
-	<insert id="insertUser">
-		insert into customer(name, email, password)
-		values
-		(#{name}, #{email}, #{password})
-	</insert>
 
 	<insert id="createBooking">
 		insert into booking(customer_id, room_id)
@@ -55,6 +39,28 @@
 		where id=#{id}
 	</update>
 
+	<!-- login -->
+	<select id="checkCustomerExist" resultMap="userMap">
+		select *
+		from customer
+		where email=#{email} and password=#{password}
+	</select>
+
+	<!-- signup -->
+	<select id="checkCustomerAlreadySignup" resultMap="userMap">
+		select *
+		from
+		customer
+		where email=#{email}
+	</select>
+
+	<insert id="insertUser">
+		insert into customer(name, email, password)
+		values
+		(#{name}, #{email}, #{password})
+	</insert>
+
+	<!-- resultMap -->
 	<resultMap type="com.se.entity.Room" id="roomMap">
 		<id column="id" property="id" />
 		<result column="name" property="name" />

@@ -21,15 +21,6 @@ public class HotelBookingService {
 	HotelBookingMapper bookingMapper;
 
 	/**
-	 * Get the list of rooms
-	 *
-	 * @return the list of rooms
-	 */
-	public ArrayList<Room> getRoomList() {
-		return this.bookingMapper.getRoomList();
-	}
-
-	/**
 	 * Get all room bookings
 	 *
 	 * @return the list of room bookings
@@ -71,7 +62,7 @@ public class HotelBookingService {
 	public Customer checkCustomerExist(String email, String password) {
 		return this.bookingMapper.checkCustomerExist(email, password);
 	}
-	
+
 	/**
 	 * Check if a customer with the given email and password exists in the system
 	 *
@@ -105,15 +96,17 @@ public class HotelBookingService {
 	 * Check out a customer from the selected room
 	 *
 	 * @param customer     the customer to check out
-	 * @param selectedRoom the selected room
+	 * @param selectedRoomlist the selected room
 	 */
-	public void checkout(Customer customer, SelectedRoomListDto selectedRoom) {
+	public void checkout(Customer customer, SelectedRoomListDto selectedRoomlist) {
+		String[] roomList = selectedRoomlist.getSelectedRoomList().split(",");
 		try {
-			this.bookingMapper.cancelBooking(Integer.parseInt(customer.getId()),
-					Integer.parseInt(selectedRoom.getSelectedRoomList()));
-			this.bookingMapper.changeRoomStatus(false, Integer.parseInt(selectedRoom.getSelectedRoomList()));
+			for (String roomId : roomList) {
+				this.bookingMapper.cancelBooking(Integer.parseInt(customer.getId()),
+						Integer.parseInt(roomId));
+				this.bookingMapper.changeRoomStatus(false, Integer.parseInt(roomId));
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
 		}
 	}
